@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Leave Autopilot Guide</title>
+<style>
+  :root {
+    --bg: #f4f7f6; --surface: #fff; --text: #15201e; --muted: #5b6866; --line: rgba(15, 42, 38, 0.1);
+    --accent: #289c8e; --accent-strong: #1f7f74; --accent-soft: #e5f3f1;
+    --warn: #9a6700; --warn-soft: #fff6dd; --danger: #b42318; --danger-soft: #fdecea;
+    --shadow: 0 0 0 1px rgba(15, 42, 38, 0.06), 0 1px 2px rgba(15, 42, 38, 0.06);
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Ubuntu, Cantarell, "Noto Sans", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+  .page { max-width: 820px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1, h2, h3 { line-height: 1.25; text-wrap: balance; margin: 0; }
+  h1 { font-size: 30px; }
+  h2 { font-size: 21px; margin-bottom: 6px; }
+  h3 { font-size: 15px; margin-bottom: 4px; }
+  p { margin: 0 0 10px; text-wrap: pretty; }
+  code { font-size: 13px; background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+  .muted { color: var(--muted); }
+
+  .hero { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  .hero img { width: 56px; height: 56px; border-radius: 14px; outline: 1px solid rgba(0, 0, 0, 0.1); outline-offset: -1px; }
+  .lede { font-size: 17px; color: var(--muted); margin: 6px 0 24px; }
+
+  .cards3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 36px; }
+  .card { background: var(--surface); border-radius: 14px; padding: 16px; box-shadow: var(--shadow); }
+  .card p { margin: 0; color: var(--muted); font-size: 14px; }
+  .num-icon { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--accent-soft); color: var(--accent-strong); font-weight: 700; margin-bottom: 8px; }
+
+  .step { display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; margin: 0 0 40px; }
+  .step.full { grid-template-columns: 1fr; }
+  .step-label { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-strong); margin-bottom: 4px; }
+  ol, ul { margin: 0 0 10px; padding-left: 22px; }
+  li { margin: 3px 0; }
+
+  /* Mock screens, built with the extension's own styles */
+  .screen { background: var(--bg); border-radius: 14px; padding: 10px; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 12px 30px rgba(15, 42, 38, 0.12); font-size: 12.5px; line-height: 1.45; }
+  .screen .bar { display: flex; align-items: center; gap: 8px; padding: 4px 4px 10px; }
+  .screen .bar img { width: 22px; height: 22px; border-radius: 6px; }
+  .screen .bar b { font-size: 14px; }
+  .screen .bar .ghost { margin-left: auto; color: var(--muted); font-weight: 600; }
+  .m-card { background: var(--surface); border-radius: 10px; padding: 10px; box-shadow: var(--shadow); margin-bottom: 8px; }
+  .m-row { display: flex; align-items: center; gap: 6px; }
+  .m-input { flex: 1; height: 28px; border: 1px solid var(--line); border-radius: 7px; background: var(--bg); display: flex; align-items: center; padding: 0 8px; font-variant-numeric: tabular-nums; }
+  .m-input.empty { color: var(--muted); }
+  .m-input.focus { box-shadow: 0 0 0 2px var(--accent); }
+  .m-btn { height: 28px; padding: 0 10px; border-radius: 7px; background: var(--accent-soft); font-weight: 600; display: inline-flex; align-items: center; white-space: nowrap; }
+  .m-btn.primary { background: var(--accent); color: #fff; }
+  .m-btn.danger { background: var(--danger); color: #fff; }
+  .m-btn.small { height: 24px; padding: 0 7px; background: transparent; box-shadow: inset 0 0 0 1px var(--line); color: var(--muted); font-weight: 500; font-size: 11.5px; }
+  .m-label { color: var(--muted); font-size: 11.5px; margin-bottom: 3px; }
+  .m-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .m-big { font-size: 19px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .delta { color: var(--warn); font-weight: 600; font-size: 13px; }
+  .meter { display: flex; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; margin: 4px 0; }
+  .meter i { display: block; height: 100%; }
+  .meter .solid { background: var(--accent); }
+  .meter .hatch { background: repeating-linear-gradient(-45deg, var(--warn) 0 3px, transparent 3px 6px); }
+  table.m-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .m-table th { text-align: left; color: var(--muted); font-weight: 500; font-size: 11px; padding: 0 3px 4px; }
+  .m-table td { padding: 5px 3px; border-top: 1px solid var(--line); white-space: nowrap; }
+  .m-table .len { display: block; font-size: 10.5px; color: var(--muted); }
+  .m-table tr.skipped td:not(:last-child) { opacity: 0.5; }
+  .m-table tr.skipped .range { text-decoration: line-through; }
+  .badge { display: inline-block; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; line-height: 17px; }
+  .b-off { background: var(--accent); color: #fff; }
+  .b-per { box-shadow: inset 0 0 0 1.5px currentColor; }
+  .b-ded { color: var(--warn); background: repeating-linear-gradient(-45deg, var(--warn-soft) 0 4px, transparent 4px 8px); box-shadow: inset 0 0 0 1.5px currentColor; }
+  .ok { color: var(--accent-strong); }
+  .flag { padding: 8px; border-radius: 7px; background: var(--warn-soft); margin-bottom: 6px; }
+  .flag.reject { background: var(--danger-soft); }
+  .flag b { margin-right: 4px; }
+  .callout { background: var(--accent-soft); border-radius: 12px; padding: 12px 14px; margin: 10px 0; }
+  .callout.warn { background: var(--warn-soft); }
+  .urlbar { font: 12px/1 ui-monospace, Menlo, monospace; background: var(--surface); border-radius: 8px; padding: 9px 10px; box-shadow: var(--shadow); overflow-wrap: anywhere; }
+  .urlbar mark { background: #ffe58a; border-radius: 3px; padding: 0 2px; }
+
+  .legend { display: grid; gap: 8px; margin: 10px 0; }
+  .legend div { display: grid; grid-template-columns: 112px 1fr; gap: 10px; align-items: baseline; }
+  .legend .badge { justify-self: start; white-space: nowrap; }
+  .badge { white-space: nowrap; }
+
+  table.trouble { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow); font-size: 14px; }
+  .trouble th, .trouble td { text-align: left; padding: 10px 12px; vertical-align: top; border-top: 1px solid var(--line); }
+  .trouble th { background: var(--accent-soft); border-top: 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 8px 0 32px; }
+  footer { color: var(--muted); font-size: 13px; margin-top: 32px; }
+
+  @media (max-width: 720px) {
+    .step { grid-template-columns: 1fr; }
+    .cards3 { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: #fff; }
+    .step { break-inside: avoid; }
+  }
+  .b-std { color: #6d4fc2; border: 1.5px dashed currentColor; line-height: 14px; }
+  .step p, .step li { font-size: 15px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .chips span { padding: 1px 8px; border-radius: 999px; background: var(--bg); color: var(--muted); font-size: 11px; }
+  .chips span.on { background: var(--accent-soft); color: var(--text); font-weight: 600; }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <div class="hero">
+    <img src="data:image/png;base64,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" alt="" />
+    <div>
+      <h1>MenaME Leave Autopilot</h1>
+      <p class="muted" style="margin:0">Files your leave requests for you.</p>
+    </div>
+  </div>
+  <p class="lede">Reads your punches, finds the missing leaves, and fills them in MenaME. Nothing is sent until you click.</p>
+
+  <h2>You need</h2>
+  <ul>
+    <li>Firefox, and the office network or VPN</li>
+    <li>Your MenaME login and the attendance device login</li>
+    <li>Your ID number</li>
+  </ul>
+  <hr />
+
+  <section class="step">
+    <div>
+      <span class="step-label">Step 1</span>
+      <h2>Install</h2>
+      <ol>
+        <li>Drag the <code>.xpi</code> file onto Firefox.</li>
+        <li>Click <b>Add</b>.</li>
+        <li>Pin the icon (puzzle-piece → gear → <b>Pin to Toolbar</b>).</li>
+      </ol>
+    </div>
+    <div class="screen">
+      <div class="m-card" style="margin:0">
+        <div class="m-row" style="margin-bottom:8px"><img src="data:image/png;base64,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" alt="" style="width:28px;height:28px;border-radius:7px" /><b>Add MenaME Leave Autopilot?</b></div>
+        <div class="m-row" style="justify-content:flex-end"><span class="m-btn small">Cancel</span><span class="m-btn primary">Add</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div>
+      <span class="step-label">Step 2 · once</span>
+      <h2>Your details</h2>
+      <p>Icon → <b>Settings</b>. Enter your <b>ID number</b>, <b>device user number</b> and the device <b>login</b>. Save.</p>
+      <p class="muted">Device user number: on the device go to Report → tick your name → Search → <b>More</b>. It's the number after <code>uid=</code>.</p>
+      <div class="urlbar">…/csl/query?action=run&amp;<mark>uid=23</mark>&amp;sdate=…</div>
+    </div>
+    <div class="screen">
+      <div class="bar"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAYAAADimHc4AAAAAXNSR0IArs4c6QAAAERlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAA6ABAAMAAAABAAEAAKACAAQAAAABAAAAYKADAAQAAAABAAAAYAAAAACpM19OAAALzUlEQVR4Ae1ceWwU1xn/7PV92+D7BGJT7tsBjJsAIYa0itRUUVOpbUQqlD/aRAqFtlGFQKVS2zilhUilahTUlqptWqK0OUxowC7YmNhAzGEcc9lgG9/3ie9+v2fGXq93vLv27BzRfJK1s7Mz7/h+7333s8fCtw+NkkmaccBTs57NjgUHTAA0XggmACYAGnNA4+7NHWACoDEHNO7e3AEmABpzQOPuzR1gAqAxBzTu3twBJgAac0Dj7s0dYAKgMQc07t7cASYAGnNA4+4NvQNGR0cJf0YmwwIAxgd4+4g/I4NgWAD6h4dpW8pj4g/XRiXDAuDhQZQ1L5W2z08lXBuVvIw48BEWP1EBQbQ6Oo6Z70ExgcHU3NdLFgMiYcgdMMAiZ11MPIX7+VOYrx+lxybQoEHFkCEBwK59iuW/RNAFBlz8YviGA2BM/ATSxvhkif+0IS6JogOCCb8ZjQwHAMTPWhY5UQGB47ye4x9Aj8clEH4zGhkOADD4aSvxIzH8qWQWSQa0hgwFAERMJK98iBxbWh+XyGIoyHBiyFAADI4M05qYOIoODLLlvwBmLVtGRhNDhgJghHXs1uQFU5gv3Xg6JVW6NMynYQCA+JnLyjYjPkWWuRvj2Rri3WEka8gwAED8rGLPNy4oWBYA6Ic1EEP8rFHIMABgVW9LkRc/EsPhlJGB3AFDACCJn00JKRKfZT8zWAzBRzCKGDIEABA/K6PiKD4oRJbx0g8I0sFRM4oYUgUAzlvNKnOF1Wwd+5GYLfc5WzEkMm0qyTG3AwDmB3Lmyt/bm/qGBql/eMgl8QDmI+q5KWEi9iPHeOn+TMQQ+sHYMEY/L28xZjUybW7PB2BiIT6+9MaTO+hmaxPl19yja4311NjbQ8OjI+TtaSGLp6dsFGFM/CRRQnCoxF+Hn5IYyqm4SX4W+1OEnh4eGSG0b/HwFI7c8sgYymQ9s2huFP3kfyepa6CfLLIjczgMpx6wPzqnXnXuIUyusqONzlZX0t70TPruklXUxMy/0lhHBQxGcf0DutfeSr288jz5WW8Gw9MqtgznK2temstseGZ+Gp1kAKwJi2GImQ7g/XmVPxY+R+QVwHSYuDBjQb+9eJ7u8pjwjLvJ7QBgAliFfyr9nLYzI5dFRouJTuRzh3hnNNNntVV0vqaKbjQ3UFt/n9gZeBdgVDAzXKWy5kYGbSI6h4RNqJ8fLZ4Txc5cMoezk2hhRCSLm8ksKGtppGPXL5GvzM5xdRyOnvdQ65ww5OtXE+fRsR3PiS0vN7Da7i76fclndPxGiViBEBVDLCZ+9cR2en7hUrnXJt1//1YZ7WURIok2yPVvL1pBP1y9flpRhh2y65P36cz9u1OAmdSBgl/croSlsWJFnWMx9MHtcumW3U94uvs2bqYnGayHQ0NiDUM0HSzMpcv1tXbfsb4J0Xbg/BmRIcP6RxvwH/ZnbJ2W+Wjjo7vllFtVoRrz0adqAKAz6IPDlwup9WEfvsoSwMKKnx8W/khJelD3wAD9mFd1XU+X7HsNPd20J++R8uS+oGBTQsPoDW7L30bU2DbSxmP63aVC1RP7qgLgxQq2oqOVjpYU2c5/yvdY3gnZbDnBhB1m0eBjsQjF+PrZU8JctH0BtUGvnztFt9uaxbMQJwGsRGF9xQc7duD+ePUit99CGKOapG5vPDN/Xt1/K7tK15vqHc4TgbV9GzYLcxG6AAozj0VEdlH+lHffLM4XshuWy5jeGKGf8buomHBEUPzQOWopXuvxqA4A6nh6hwYou7hAMNZ6MPaun//KMvr+8rUsywfFz3CSjl2/TO+WXx9//J98/c61SwzQmNmIZ19atoZeWLR8/Bm5C5ik2Qxe9+DAJPNX7nml76sOACaAlZZfU0n/ufOFU/PZk76JtiQtGFfKsG5+UZhHV9mhw9/BC3njFg+Yj2f3Pp7pVNsf3ikXPoqcw+ZUI7N4SBMAMF4o5CNQyFzR5ojGlHIWO04RIuWICjg4bq/lfiz+egcHhfJEOhLO1S+fyHJKnMAYOCwUr2ZsUNcKsmb0mEJuo6NXiq1vy14j05W9eQcFc1gDShkec3VXu/jDNe7hNyjuGDs5Y3sN/+FKkTAK1Fa81mPRDnoeBRTyX29coeK6GusxyV6v4pD0/owtHMwbQXxV7CLsJFzj3gG29RFScIYucQjkeGmJbKzImTaUeEZTAGA6els8qba70+m5PJe2hHYtXyf0gfQSnK2XV6TTN9IWS7ccfiIehfMFD3kMsJq0IsvcZ7MOqN35IAfEsGIRGzq89euTygydGUt6bCKVc2T1ZmuLCFOgTP1g5jaxI5x5H8+ksq7YwQG7jv6HVN7SJAJ02E1qk2qxIEwMzhFiQqnhc+m1tRn0tQULZzxfhLO/9cHfhen47rMvcMXERKmiq41+eu8OHbpYQAjEQeFbR2NdbcvV51UDAIyHV/udxSvp5ZXpIsni6mBtn7/GzhwinoiwzpY6Ofb/NnvDf+aoLa7VMkvdDgDi70MsbjK5ngf2/Iqo2Nnyyq3vl7JX/CY7iWerK4RIc7eF5DYAoNjgFCGT9crqDSKUDAfKCARReeJWKb11+QJVdbaLEIh1bkHJObgFADhEsG6+mbaUXl2zQRwhUnLQarWF6Opbn1+gf90sFSdwEBBUmhQFAKsemadV0bG0e90mkXlSesBatFf4oIp+czGfShrqeGEpmyVWDAAwHwLme0tXs8hZT0HslX6ZCPmII7wbjrOSHuGJTSQ7ZzfLyQnRWbSFASHSearylsjvRvPJxUSW/8khYZQYEso1nSGiuDaUD9W5W7HNdBowGOAX4MQlnMPqrg6634FwRwc1cCKoo79fzNGDdYRSpBgAGBCUF3K61V2dBBMR30FwcJCRCmHmo8IZYACUJIDDIOF7JN8P5fofdx81lZjc1NczNlZWslWdHYLJdcx0ML+TQehj7xqhahD8AqRFMTalfQRFAZgYLPbDZItniMFo4cnBgYKpNxkcbwbHl7A7dq1Yx8p7CZpSnP7xxTV6hyseunglw9ZHCMMek7GTxxSu8krXdlKKA2DbgfRdElFjK8gWnBEBzv3ONqfC01Kbrn4i/IzsV5C3rxAlajF5unGqBsB0g5DA8fH04pqhqcePpnvXld8Q0vbhSjylxYgrY7B9dvJStP1V5e8WTw+K4OIpd1GEr7+Q5e5qfybt6gYAqGsvXp2hzCR3URgreVhgytkwsx+pbgDg+nWORFqEMnZ2WijCKmlwXKwltRfKil5UPjyyzqT7Wn7qBgCsSpSUBHHE1BlCCHlnzgnaefI9+u+92868IpxDmMPmDrDDLtTiI1wdyOcIHNFfOJX4yukPuXx8gHr479XTH4niX0fvoW30gRSmXkgXVhCYAZcn2MeHfKcpIYQThQIsVLFBlkseNXyKn5/PpXp2AvdwCbx035bJKOxC4h4l7xaYXjog/YggZiIcMbm0IByn3VyGcpQrGRAQszYlcY17+O1HeTniYIU93qJt9KHGyRd7/du7p58dwACEyVhANRyL2Z2bQ0V11UJP2JsIFjR0yL9vl1E9h5EPbXnG7qG+cDZzJS/cXjtq39PPDmC5HMFmoi0hpvQiK1uUrjhzYgXPFNVW04sfnxAhD9v2IvwCdKUDdAMAGBXhPxmA02zpvJTzHlW2t7lUsw9Zj1M1O/ndXD5sYU3430J6In0BwKtTIlQrw9Jp58jkTDJReAc1/z/gNlCNLZEtyNJ9rT51AwByrjgkBwPx10XnaH/BGVFuKGfROMMwvIuTkPsKPuWMVoF4BbEm+TOZzrSq7DO6UcJYsYi3//TsJ4SwMcSIEolwWEgebP0c4QQ7wuE4HDiTHaUs2ydaUywlOdHkzK7AfKxOVCG4i0EoFsCxpzq2krAz9EC6EUGobn7Q3eE25oPZABYpRr0wH2PSDQAYjJwTht+UIr3VJukKAKWYbKR2TAA0RssEwARAYw5o3L25A0wANOaAxt2bO8AEQGMOaNy9uQNMADTmgMbdmzvABEBjDmjcvbkDTAA05oDG3Zs7wARAYw5o3P3/ARKgNkqKIq4KAAAAAElFTkSuQmCC" alt="" /><b>Settings</b></div>
+      <div class="m-card" style="margin:0">
+        <div class="m-label">Your ID number</div><div class="m-input focus">1234567</div>
+        <div class="m-label" style="margin-top:8px">Device user number</div><div class="m-input">23</div>
+        <div class="m-label" style="margin-top:8px">Password</div><div class="m-input">••••••••</div>
+        <div class="m-row" style="margin-top:10px"><span class="m-btn primary">Save</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div>
+      <span class="step-label">Step 3</span>
+      <h2>Load a month</h2>
+      <p>Open MenaME → <b>Leaves</b>. Click the icon, pick the month, press <b>Load</b>.</p>
+      <p class="muted">Big number = what you have now. Red = what the list will use.</p>
+    </div>
+    <div class="screen">
+      <div class="m-card"><div class="m-row"><span class="m-btn small">‹</span><div class="m-input">November 2026</div><span class="m-btn small">›</span><span class="m-btn primary">Load</span></div></div>
+      <div class="m-stats" style="margin:0">
+        <div class="m-card" style="margin:0"><div class="m-label">Personal left now</div><div class="m-big">2:12 <span class="delta">−1:48</span></div><div class="meter"><i class="solid" style="width:10%"></i><i class="hatch" style="width:45%"></i></div></div>
+        <div class="m-card" style="margin:0"><div class="m-label">Annual vacation now</div><div class="m-big">16.000</div><div class="m-label">days</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div>
+      <span class="step-label">Step 4</span>
+      <h2>Check the list</h2>
+      <div class="legend">
+        <div><span class="badge b-off">Official (bus)</span><span>Left 3:30–3:59. Free.</span></div>
+        <div><span class="badge b-per">Personal</span><span>From your 4 hours a month.</span></div>
+        <div><span class="badge b-ded">From vacation</span><span>When the 4 hours are gone.</span></div>
+      </div>
+      <p class="muted"><b>Edit</b> to change times, <b>Skip</b> to leave one out.</p>
+    </div>
+    <div class="screen">
+      <div class="m-card" style="margin:0">
+        <table class="m-table">
+          <tr><th>Date</th><th>Type</th><th>Time</th><th></th></tr>
+          <tr><td>10 Nov</td><td><span class="badge b-off">Official (bus)</span></td><td>3:43–4:00 PM</td><td><span class="m-btn small">Edit</span></td></tr>
+          <tr><td>11 Nov</td><td><span class="badge b-per">Personal</span></td><td>8:03–9:51 AM</td><td><span class="m-btn small">Edit</span></td></tr>
+          <tr><td>16 Sep</td><td><span class="badge b-ded">From vacation</span></td><td>2:28–4:00 PM</td><td><span class="m-btn small">Edit</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div>
+      <span class="step-label">Step 5</span>
+      <h2>Send</h2>
+      <p>First times: <b>Fill next for review</b>, check it, press <i>Send For Approval</i> yourself.</p>
+      <p>Later: tick the box, press <b>Send</b>, click again to confirm. Keep the MenaME tab open.</p>
+    </div>
+    <div class="screen">
+      <div class="m-card" style="margin:0">
+        <div class="m-row" style="margin-bottom:8px"><span class="m-btn">Fill next for review</span></div>
+        <div class="m-row" style="margin-bottom:8px">☑ <span>I reviewed the list above</span></div>
+        <span class="m-btn danger">Click again to send 3</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div>
+      <span class="step-label">For students</span>
+      <h2>Study Leave</h2>
+      <ol>
+        <li>Settings → <b>Study</b> → tick <b>I'm a student</b>.</li>
+        <li>Set your hours per week (10) and what to use first.</li>
+      </ol>
+      <div class="legend"><div><span class="badge b-std">Study</span><span>From your weekly study hours.</span></div></div>
+      <p class="muted">Weeks run Sunday–Saturday. To pick for one leave: <b>Edit</b> → <b>Take from</b>.</p>
+    </div>
+    <div class="screen">
+      <div class="m-card">
+        <div class="m-row" style="margin-bottom:6px">☑ <b>I'm a student</b></div>
+        <div class="m-label">Study hours per week</div><div class="m-input">10</div>
+        <div class="m-label" style="margin-top:8px">Take time from first</div><div class="m-input">Personal hours, then study</div>
+      </div>
+      <div class="m-card" style="margin:0">
+        <div class="m-label">Study this week</div>
+        <div class="m-big">8:12 <span class="delta">−1:48</span></div>
+        <div class="chips"><span>8–14 Nov 10:00</span><span>15–21 Nov 10:00</span><span class="on">22–28 Nov 8:12</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="step">
+    <div>
+      <span class="step-label">Extras</span>
+      <h2>Good to know</h2>
+      <ul>
+        <li><b>What if I leave at…</b> shows what a leave would cost you.</li>
+        <li><b>Copy email to HR</b> on days with one punch.</li>
+        <li>Rejected requests show who rejected them and why.</li>
+      </ul>
+    </div>
+    <div class="screen">
+      <div class="m-card" style="margin:0">
+        <b>What if I leave at…</b>
+        <div class="m-row" style="margin:8px 0"><div class="m-input">09:00 AM</div><div class="m-input">03:00 PM</div></div>
+        <div>Personal: 1:00 → <b>0:00</b> <span class="delta">−1:00</span></div>
+        <div>Vacation: 15.744 → <b>15.578</b> <span class="delta">−1:00</span></div>
+      </div>
+    </div>
+  </section>
+
+  <h2>Problems?</h2>
+  <table class="trouble">
+    <tr><th>Message</th><th>Fix</th></tr>
+    <tr><td>"enter your ID number…"</td><td>Fill in Step 2.</td></tr>
+    <tr><td>"NetworkError"</td><td>Connect to the office network or VPN.</td></tr>
+    <tr><td>"No punches found"</td><td>Check your ID and device user number.</td></tr>
+    <tr><td>"Reload the MenaME tab"</td><td>Press F5 on MenaME.</td></tr>
+    <tr><td>Anything else</td><td>Popup → <b>Activity</b> → <b>Copy</b> → send to Ahmad.</td></tr>
+  </table>
+
+  <footer><p>Everything stays in your Firefox. Always check the list before sending.</p></footer>
+</main>
+</body>
+</html>

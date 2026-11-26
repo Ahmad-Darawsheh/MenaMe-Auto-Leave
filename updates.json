@@ -1,0 +1,12 @@
+{
+  "addons": {
+    "mename-leave-importer@ahmad.local": {
+      "updates": [
+        {
+          "version": "2.4.1",
+          "update_link": "https://ahmad-darawsheh.github.io/MenaMe-Auto-Leave/releases/mename-leave-autopilot-2.4.1.xpi"
+        }
+      ]
+    }
+  }
+}
