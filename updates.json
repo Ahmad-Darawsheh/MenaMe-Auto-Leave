@@ -9,6 +9,10 @@
         {
           "version": "2.4.2",
           "update_link": "https://ahmad-darawsheh.github.io/MenaMe-Auto-Leave/releases/mename-leave-autopilot-2.4.2.xpi"
+        },
+        {
+          "version": "2.4.3",
+          "update_link": "https://ahmad-darawsheh.github.io/MenaMe-Auto-Leave/releases/mename-leave-autopilot-2.4.3.xpi"
         }
       ]
     }
